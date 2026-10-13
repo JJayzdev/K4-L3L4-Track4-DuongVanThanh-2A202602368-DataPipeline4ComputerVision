@@ -5,7 +5,7 @@
 | Họ và tên | Duong Van Thanh |
 | MSSV (đúng bằng `LAB_STUDENT_ID` trong `.env`) | `2A202602368` |
 | GitHub | https://github.com/JJayzdev/K4-L3L4-Track4-DataPipeline4ComputerVision |
-| Trip dùng cho bài tập sập và chạy lại | `trip-00003` |
+| Trip dùng cho bài tập sập và chạy lại | `trip-01037` (5 số cuối MSSV: 02368; 2368 % 26 = 2) |
 
 ## Kết quả cuối
 
@@ -57,7 +57,7 @@ Manifest ghi dataset `55e5ca990413`, 1019 frame, train 707, val 120, test 192 v�
 
 ### Câu 9
 
-Trip retry là `trip-00003`. Chạy lại partition hai lần giữ toàn bảng ở 1246 dòng và fingerprint không đổi. Trong Airflow, task extraction lỗi chuyển đỏ và downstream phụ thuộc có thể `upstream_failed`; clear đúng task trip rồi chạy lại. Nhờ ghi theo partition và idempotent, dữ liệu không nhân đôi và dataset version không đổi nếu đầu vào không đổi. Evidence là `idempotency.json`.
+Trip retry là `trip-01037`, ứng với chỉ số 2 từ 2368 % 26. Trong run `manual__2026-10-13T06:14:31+00:00`, đúng một mapped task `silver_frames[2]` lỗi với log `simulated crash while extracting trip-01037`; 7 task downstream chuyển `upstream_failed`. Tôi clear mapped task này kèm 7 downstream bị chặn, không chạy lại 25 trip đã thành công. DAG phục hồi thành success; verify vẫn 27/27, bảng frames có 1246 dòng và dataset version vẫn `55e5ca990413`. Bằng chứng: `retry_failure.png`, `retry_clear_scope.png`, `retry_success.png`. Thí nghiệm idempotency riêng dùng trip-00003.
 
 ### Câu 10
 
